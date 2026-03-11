@@ -1,11 +1,26 @@
 import { Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
-import React from "react";
+import React, { useMemo } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
-const queryClient = new QueryClient();
-
 export default function RootLayout() {
+  const queryClient = useMemo(
+    () =>
+      new QueryClient({
+        defaultOptions: {
+          queries: {
+            staleTime: 5 * 60 * 1000,
+            gcTime: 30 * 60 * 1000,
+            retry: 1,
+            refetchOnReconnect: true,
+            refetchOnMount: false,
+            refetchOnWindowFocus: false,
+          },
+        },
+      }),
+    []
+  );
+
   return (
     <QueryClientProvider client={queryClient}>
       <StatusBar style="light" />
@@ -21,6 +36,7 @@ export default function RootLayout() {
           contentStyle: {
             backgroundColor: "#0B1220",
           },
+          animation: "fade",
         }}
       >
         <Stack.Screen

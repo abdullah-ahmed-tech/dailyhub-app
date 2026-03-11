@@ -3,6 +3,10 @@ import { SafeAreaView, StyleSheet, Text, View } from "react-native";
 import { CalculatorButton } from "../src/features/calculator/calculator-button";
 import { theme } from "../src/theme";
 
+function isSafeExpression(expression: string) {
+  return /^[0-9+\-*/().\s]+$/.test(expression);
+}
+
 export default function CalculatorScreen() {
   const [expression, setExpression] = useState("");
   const [result, setResult] = useState("0");
@@ -23,8 +27,18 @@ export default function CalculatorScreen() {
   const calculate = () => {
     try {
       if (!expression.trim()) return;
+      if (!isSafeExpression(expression)) {
+        setResult("Error");
+        return;
+      }
+
       const evalResult = Function(`"use strict"; return (${expression})`)();
-      setResult(String(evalResult));
+      const formatted =
+        typeof evalResult === "number" && Number.isFinite(evalResult)
+          ? String(evalResult)
+          : "Error";
+
+      setResult(formatted);
     } catch {
       setResult("Error");
     }

@@ -6,7 +6,15 @@
     "orientation": "portrait",
     "userInterfaceStyle": "dark",
     "scheme": "dailyhub",
-    "plugins": ["expo-router"],
+    "plugins": [
+      "expo-router",
+      [
+        "expo-location",
+        {
+          "locationWhenInUsePermission": "Allow DailyHub to access your location for local weather."
+        }
+      ]
+    ],
     "experiments": {
       "typedRoutes": true
     },
